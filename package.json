@@ -21,6 +21,7 @@
   "homepage": "https://github.com/blackman3178/Team-Profile-Generator#readme",
   "dependencies": {
     "bootstrap": "^5.1.3",
+    "bootstrap-icons": "^1.6.0",
     "inquirer": "^8.2.0"
   }
 }
