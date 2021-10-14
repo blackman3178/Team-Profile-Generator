@@ -43,7 +43,6 @@ generateManager = (data) => {
     let {name, id,email, officeNumber} = data;
     const manager = new Manager(name, id, email, officeNumber);
     managerArray.push(manager);
-    generateInitialHTML(manager);
     askToPlayAgain();
 }
 generateIntern = (data) => {
@@ -138,7 +137,8 @@ askToPlayAgain = () => {
     });
 }
 
-const initialHTMLText = (manager) => {
+//sets up the text to be made into an html file using the final cards function
+const initialHTMLText = () => {
      return (`<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -150,7 +150,7 @@ const initialHTMLText = (manager) => {
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css"
         />
-        <link rel="stylesheet" href="./public/style.css">
+        <link rel="stylesheet" href="./style.css">
     </head>
     <body>
         <div>
@@ -161,19 +161,7 @@ const initialHTMLText = (manager) => {
         <div class="container">
             <div class="row row-cols-1 row-cols-lg-3 align-items-stretch">
                 <div class="shadow-lg card bg-secondary pb-3">
-                    <div class="card-title bg-primary pb-3 rounded pl-3 text-white">
-                        <h2>${manager.getName()}</h2>
-                        <h3>${manager.getRole()}</h3>
-                    </div>
-                    <div class=" bg-secondary container ">
-                        <div id="id" class="bg-white border">ID: ${manager.getId()}</div>
-                    </div>
-                    <div class="  bg-secondary container ">
-                        <div id="email" class="bg-white border">Email: ${manager.getEmail()}</div>
-                    </div>
-                    <div class="  bg-secondary container ">
-                        <div id="office-num" class="bg-white border">Office Number: ${manager.getOfficeNumber()}</div>
-                    </div>
+                    ${addFinalCards()}
                 </div>
                 
             </div>
@@ -182,12 +170,84 @@ const initialHTMLText = (manager) => {
     </html>`);
 }
 
-generateInitialHTML = (manager) => {
-    console.log(manager);
-    fs.writeFile("team.html", initialHTMLText(manager), (err) =>
+//writes html file with manager info done.
+const generateInitialHTML = () => {
+    fs.writeFile("./dist/team.html", initialHTMLText(), (err) =>
     
-    err ? console.log(err) : console.log("Succefully created team.html!"))
+    err ? console.log(err) : console.log("You have succesfully made team.html! \n"))
 }
 
+// creates html card for an engineer
+const addEngineerToHTML = (engineer) => {
+    return (`<div class="card-title bg-primary pb-3 rounded pl-3 text-white">
+    <h2>${engineer.getName()}</h2>
+    <h3>${engineer.getRole()}</h3>
+</div>
+<div class=" bg-secondary container ">
+    <div class=" id bg-white border">ID: ${engineer.getId()}</div>
+</div>
+<div class="  bg-secondary container ">
+    <div  class="bg-white border email">Email: <a href="mailto:${engineer.getEmail()}">${engineer.getEmail()}</a></div>
+</div>
+<div class="bg-secondary container ">
+    <div class="bg-white github border">GitHub Profile: ${engineer.getGitHub()}</div>
+</div>`);
+}
+
+// creeates html card for an intern
+const addInternToHTML = (intern) => {
+    return(`<div class="card-title bg-primary pb-3 rounded pl-3 text-white">
+    <h2>${intern.getName()}</h2>
+    <h3>${intern.getRole()}</h3>
+</div>
+<div class=" bg-secondary container ">
+    <div class=" id bg-white border">ID: ${intern.getId()}</div>
+</div>
+<div class="  bg-secondary container ">
+    <div  class=" email bg-white border">Email: <a href="mailto:${intern.getEmail()}">${intern.getEmail()}</a></div>
+</div>
+<div class="  bg-secondary container ">
+    <div class=" school bg-white border">School: ${intern.getSchool()}</div>
+</div>`);
+}
+
+//creates html card for a manager
+const addManagerToHTML = (manager) => {
+    return(`<div class="card-title bg-primary pb-3 rounded pl-3 text-white">
+    <h2>${manager.getName()}</h2>
+    <h3>${manager.getRole()}</h3>
+</div>
+<div class=" bg-secondary container ">
+    <div id="id" class="bg-white border">ID: ${manager.getId()}</div>
+</div>
+<div class="  bg-secondary container ">
+    <div id="email" class="bg-white border">Email: <a href="mailto:${manager.getEmail()}">${manager.getEmail()}</a></div>
+</div>
+<div class="  bg-secondary container ">
+    <div id="office-num" class="bg-white border">Office Number: ${manager.getOfficeNumber()}</div>
+</div>`);
+}
+
+//this function adds all of the employe objects into html text that can be added to the initial HTML and can be written.
+const addFinalCards = () => {
+    let cardText = "";
+
+    managerArray.forEach(manager => cardText += addManagerToHTML(manager));
+
+    engineerArray.forEach(engineer => cardText += addEngineerToHTML(engineer));
+
+    internArray.forEach(intern => cardText += addInternToHTML(intern));
+
+    return cardText;
+}
+
+//ends program and calls for the function to generate the final html.
+const finishGeneration = () => {
+    generateInitialHTML();
+    console.log("Great, I hope you enjoyed The Team Generator!");
+}
+
+
+// initializer function.
 askForManager();
 
